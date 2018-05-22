@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 import com.reparaya.dtos.InmuebleDto;
 import com.reparaya.dtos.SolicitudReparacionDto;
-
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class SolicitudRepacionODataAdapterImpl implements SolicitudReparacionAdapter {
@@ -28,17 +26,17 @@ public class SolicitudRepacionODataAdapterImpl implements SolicitudReparacionAda
 		return SolicitudRepacionODataAdapterImpl.solicitudRepacionAdapterImpl;
 	}
 
-	public List<SolicitudReparacionDto> getSolicitudesNoAsignadas() {
+	public List<SolicitudReparacionDto> getSolicitudes() {
 		try {
 			JSONObject jSonResponse = OdataHttpRequest.getInstance().get(this.SERVICE_URL);
-			for (Object o : ((JSONObject) jSonResponse.get(SolicitudRepacionODataAdapterImpl.JSON_FIRST_NODE)).getJSONArray(SolicitudRepacionODataAdapterImpl.JSON_SECOND_NODE)) {
-				if (o instanceof JSONObject) {
-					System.out.println(((JSONObject) o).get(SolicitudRepacionODataAdapterImpl.JSON_SOLICITUD_ID).toString());					
+			if(jSonResponse!=null) {
+				for (Object o : ((JSONObject) jSonResponse.get(SolicitudRepacionODataAdapterImpl.JSON_FIRST_NODE)).getJSONArray(SolicitudRepacionODataAdapterImpl.JSON_SECOND_NODE)) {
+					if (o instanceof JSONObject) {
+						System.out.println(((JSONObject) o).get(SolicitudRepacionODataAdapterImpl.JSON_SOLICITUD_ID).toString());					
+					}
 				}
 			}
-
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
 

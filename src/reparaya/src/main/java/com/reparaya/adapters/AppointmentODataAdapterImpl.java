@@ -3,14 +3,11 @@ package com.reparaya.adapters;
 import java.util.Map;
 import com.reparaya.dtos.SolicitudReparacionDto;
 
+import net.sf.json.JSONObject;
+
 
 public class AppointmentODataAdapterImpl implements AppointmentAdapter {
-	
-	private final static String ENTITY="";
-	private final static String PASSWORD="ReparaYa";
-	private final static String USERNAME="REPYAADMIN";
-	private final static String FIST_FILTER="ProcessingTypeCode eq 'ZSRI'";
-	private final static String SERVICE_URL = "https://my305237.crm.ondemand.com/sap/c4c/odata/cust/v1/creacionvisita/";
+	private final static String SERVICE_URL = "https://my305237.crm.ondemand.com/sap/c4c/odata/cust/v1/creacionvisita/CreacionVisitaRootCollection";
 	
 	private Map<String, String> headers;
 	private static AppointmentODataAdapterImpl appointmentODataAdapterImpl;
@@ -26,6 +23,13 @@ public class AppointmentODataAdapterImpl implements AppointmentAdapter {
 	}
 	
 	public void createSolicitudReparacion(SolicitudReparacionDto solicitudReparacionDto) {
-		solicitudReparacionDto.setState(1);
+		String payLoad="{\"IDEmpleadoAsignado\":\"E9875\",\"IDSolicitud\":\"1206203246 \",\"TipoVisita\":\"221\"}";
+		try {
+			JSONObject jsonObject=OdataHttpRequest.getInstance().post(AppointmentODataAdapterImpl.SERVICE_URL, payLoad);
+			System.out.println(jsonObject.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//solicitudReparacionDto.setState(1);
 	}
 }

@@ -25,9 +25,12 @@ public class AppointmentServicesImpl implements AppointmentServices {
 	}
 	
 	public void assignVisitas() {
-		this.solicitudesRepacion=this.solicitudReparacionAdapter.getSolicitudesNoAsignadas();
-		System.out.println("Inicie AppointmentManagementAgentBehaviour");
-		for(SolicitudReparacionDto solicitudReparacionDto : this.solicitudReparacionAdapter.getSolicitudesNoAsignadas()) {
+		//this.solicitudesRepacion=this.solicitudReparacionAdapter.getSolicitudes();
+		
+		AppointmentODataAdapterImpl.getInstance().createSolicitudReparacion(null);
+		
+		//System.out.println("Inicie AppointmentManagementAgentBehaviour");
+		/*for(SolicitudReparacionDto solicitudReparacionDto : this.solicitudReparacionAdapter.getSolicitudesNoAsignadas()) {
 			
 			InmuebleODataAdapterImpl.getInstance().completeInmueble(solicitudReparacionDto.getInmuebleDto());
 			System.out.println(solicitudReparacionDto.getState());
@@ -35,10 +38,10 @@ public class AppointmentServicesImpl implements AppointmentServices {
 			System.out.println(solicitudReparacionDto.getId());
 			System.out.println(solicitudReparacionDto.getDescripcion());
 			System.out.println(solicitudReparacionDto.getInmuebleDto().getCodigo_ciudad());
-			/*System.out.println(solicitudReparacionDto.getAgenciaDto().getNombreSede());
-			System.out.println(solicitudReparacionDto.getArrendatarioDto().getNombre());*/
+			System.out.println(solicitudReparacionDto.getAgenciaDto().getNombreSede());
+			System.out.println(solicitudReparacionDto.getArrendatarioDto().getNombre());
 			System.out.println(solicitudReparacionDto.getState());
-		}
+		}*/
 		
 	}
 

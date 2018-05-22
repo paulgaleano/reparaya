@@ -1,20 +1,10 @@
 package com.reparaya.adapters;
 
-
-
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -55,8 +45,8 @@ public class OdataHttpRequest {
 		return OdataHttpRequest.httpRequest;
 	}
 	
-	
-	public String post(String urlService, String payLoad) throws Exception {
+	public JSONObject post(String urlService, String payLoad) throws Exception {
+		JSONObject jsonObject = null;
 		HttpPost httpPost = new HttpPost(urlService);
 		httpPost.setHeader(OdataHttpRequest.HEADER_X_CSRF_TOKEN, this.getToken(urlService));
 		
@@ -65,27 +55,21 @@ public class OdataHttpRequest {
 		StringEntity postRequest=new StringEntity(payLoad);
 		
 		postRequest.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, OdataHttpRequest.APPLICATION_JSON_VALUE));
-		System.out.println("Solicitud: " + EntityUtils.toString(postRequest));
 		httpPost.setEntity(postRequest);
 		HttpResponse response = client.execute(httpPost);
 		
-		
-		
-		if (response.getStatusLine().getStatusCode() != 200) {
+		if (response.getStatusLine().getStatusCode() != 201) {
 			throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
 		}
 
-		BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+		HttpEntity entity = response.getEntity();
 
-		String output;
-		System.out.println("Output from Server .... \n");
-		while ((output = br.readLine()) != null) {
-			System.out.println(output);
+		if (entity != null) {
+			String result = EntityUtils.toString(entity, "UTF-8");
+			jsonObject = JSONObject.fromObject(result);
 		}
-
-		System.out.println("Respuesta: " + EntityUtils.toString(response.getEntity()));
-		
-		return EntityUtils.toString(response.getEntity());
+		httpPost.releaseConnection();
+		return jsonObject;
 	}
 	
 	public JSONObject get(String urlService) throws Exception {
@@ -93,6 +77,11 @@ public class OdataHttpRequest {
 		HttpGet httpGet = new HttpGet(urlService);
 		httpGet.addHeader(OdataHttpRequest.ACCEPT,OdataHttpRequest.APPLICATION_JSON_VALUE);
 		HttpResponse response = this.client.execute(httpGet);
+		
+		if (response.getStatusLine().getStatusCode() != 200) {
+			throw new RuntimeException("Falla: Código de error HTTP:"+response.getStatusLine().getStatusCode());
+		}
+	
 		HttpEntity entity=response.getEntity();
 		
 		if (entity != null) {
@@ -102,45 +91,23 @@ public class OdataHttpRequest {
         httpGet.releaseConnection();
 		return jsonObject;
 	}
-	
-	
-	private String convertStreamToString(InputStream is) {
-	    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-	    StringBuilder sb = new StringBuilder();
-
-	    String line = null;
-	    try {
-	        while ((line = reader.readLine()) != null) {
-	            sb.append(line + "\n");
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    } finally {
-	        try {
-	            is.close();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	    return sb.toString();
-	}
-	
+		
 	private String getToken(String urlService) throws Exception {
-		this.provider = new BasicCredentialsProvider();
-		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(OdataHttpRequest.USERNAME, OdataHttpRequest.USERNAME);
-		this.provider.setCredentials(AuthScope.ANY, credentials);
-		this.client = HttpClientBuilder.create().setDefaultCredentialsProvider(this.provider).build();
 		String token = null;
 		HttpGet httpGet = new HttpGet(urlService);
 		httpGet.addHeader(OdataHttpRequest.HEADER_X_CSRF_TOKEN, "Fetch");
 		
 		HttpResponse response = this.client.execute(httpGet);
+		
+		if (response.getStatusLine().getStatusCode() != 200) {
+			throw new RuntimeException("Falla: Código de error HTTP:"+response.getStatusLine().getStatusCode());
+		}
+		
 		Header headerToken = response.getFirstHeader(OdataHttpRequest.HEADER_X_CSRF_TOKEN);
 		if (headerToken == null) {
 			throw new Exception("No se retorno el token para las solicitudes");
 		}
 		token = headerToken.getValue();
-		
 		return token;
 	}
 }
