@@ -6,7 +6,6 @@ import java.util.List;
 import jade.core.behaviours.CyclicBehaviour;
 import com.reparaya.adapters.SolicitudRepacionODataAdapterImpl;
 import com.reparaya.adapters.SolicitudReparacionAdapter;
-import com.reparaya.dtos.SolicitudReparacionDto;
 import com.reparaya.services.AppointmentServicesImpl;
 
 public class AppointmentManagementAgentBehaviour extends CyclicBehaviour{		

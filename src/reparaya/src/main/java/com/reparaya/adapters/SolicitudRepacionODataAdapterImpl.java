@@ -1,23 +1,14 @@
 package com.reparaya.adapters;
 
-import java.util.ArrayList;
 import java.util.List;
-
-/*import org.odata4j.consumer.ODataConsumer;
-import org.odata4j.consumer.ODataConsumers;
-import org.odata4j.consumer.behaviors.OClientBehaviors;
-import org.odata4j.core.OEntity;
-import org.odata4j.core.OProperty;*/
-
-import com.reparaya.dtos.AgenciaDto;
-import com.reparaya.dtos.ArrendatarioDto;
+import java.util.ArrayList;
 import com.reparaya.dtos.InmuebleDto;
 import com.reparaya.dtos.SolicitudReparacionDto;
 
 public class SolicitudRepacionODataAdapterImpl implements SolicitudReparacionAdapter {
 
-	private final static String FIST_FILTER="?$filter=ServiceRequestUserLifeCycleStatusCode eq 'YG' or ServiceRequestUserLifeCycleStatusCode eq 'YM'";
-	private final static String SERVICE_URL = "https://my305237.crm.ondemand.com/sap/c4c/odata/v1/c4codata/ServiceRequestCollection";
+	
+	private final static String SERVICE_URL = "https://my305237.crm.ondemand.com/sap/c4c/odata/v1/c4codata/ServiceRequestCollection?%24filter=ServiceRequestUserLifeCycleStatusCode+eq+%27YG%27+or+ServiceRequestUserLifeCycleStatusCode+eq+%27YM%27";
 	
 	private final static String OBJECT_ID_PROPERTY="ObjectID";
 	private final static String NAME_PROPERTY="Name";
@@ -35,20 +26,52 @@ public class SolicitudRepacionODataAdapterImpl implements SolicitudReparacionAda
 	}
 	
 	public List<SolicitudReparacionDto> getSolicitudesNoAsignadas() {
+		/*CredentialsProvider provider = new BasicCredentialsProvider();
+		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("REPYAADMIN", "ReparaYa");
+		provider.setCredentials(AuthScope.ANY, credentials);
+		CloseableHttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
+
+		HttpGet httpGet = new HttpGet("https://my305237.crm.ondemand.com/sap/c4c/odata/v1/c4codata/ServiceRequestCollection?%24filter=ServiceRequestUserLifeCycleStatusCode+eq+%27YG%27+or+ServiceRequestUserLifeCycleStatusCode+eq+%27YM%27");
+	
 		try {
-			String response=OdataHttpRequest.getInstance().get("https://my305237.crm.ondemand.com/sap/c4c/odata/v1/c4codata/ServiceRequestCollection?%24filter=ServiceRequestUserLifeCycleStatusCode+eq+%27YG%27+or+ServiceRequestUserLifeCycleStatusCode+eq+%27YM%27");
-			System.out.println(response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
+			HttpResponse response = client.execute(httpGet);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			StringBuffer result = new StringBuffer();
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+			System.out.println("@@@@@@@@@@@@@@@@@@@@@@");
+			System.out.println(result.toString());
+			System.out.println("@@@@@@@@@@@@@@@@@@@@@@");
+		} catch (ClientProtocolException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (UnsupportedOperationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} */
 		
 		/*List<SolicitudReparacionDto> solicitudes=new ArrayList<SolicitudReparacionDto>();
 		for (OEntity oEntity : this.oDataConsumer.getEntities(SolicitudRepacionODataAdapterImpl.ENTITY).filter(SolicitudRepacionODataAdapterImpl.FIST_FILTER).execute()) {	
 				solicitudes.add(this.buildSolicitudReparacionDto(oEntity));
 			}
 		return solicitudes;*/
+		
+		try {
+			String response = OdataHttpRequest.getInstance().get(this.SERVICE_URL);
+			System.out.println(response);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		
+		
+		
 		return new ArrayList<SolicitudReparacionDto>();
 	}
 	

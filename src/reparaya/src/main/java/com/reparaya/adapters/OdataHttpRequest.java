@@ -1,5 +1,8 @@
 package com.reparaya.adapters;
 
+
+
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,12 +34,14 @@ public class OdataHttpRequest {
 	private final static String APPLICATION_JSON_VALUE="application/json";
 	
 	private CredentialsProvider provider;
-	
 	private UsernamePasswordCredentials credentials;
 	private CloseableHttpClient client;
 	
 	private OdataHttpRequest() {	
-		
+		this.provider = new BasicCredentialsProvider();
+		this.credentials = new UsernamePasswordCredentials(OdataHttpRequest.USERNAME, OdataHttpRequest.USERNAME);
+		this.provider.setCredentials(AuthScope.ANY, this.credentials);
+		this.client = HttpClientBuilder.create().setDefaultCredentialsProvider(this.provider).build();
 	}
 	
 	public static OdataHttpRequest getInstance() {
@@ -59,19 +64,31 @@ public class OdataHttpRequest {
 		System.out.println("Solicitud: " + EntityUtils.toString(postRequest));
 		httpPost.setEntity(postRequest);
 		HttpResponse response = client.execute(httpPost);
-		System.out.println("Respuesta: " + EntityUtils.toString(response.getEntity()));
 		
+		
+		
+		if (response.getStatusLine().getStatusCode() != 200) {
+			throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+		}
+
+		BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+
+		String output;
+		System.out.println("Output from Server .... \n");
+		while ((output = br.readLine()) != null) {
+			System.out.println(output);
+		}
+	
 		return EntityUtils.toString(response.getEntity());
 	}
 	
 	public String get(String urlService) throws Exception {
-		this.provider = new BasicCredentialsProvider();
-		this.credentials = new UsernamePasswordCredentials(OdataHttpRequest.USERNAME, OdataHttpRequest.USERNAME);
-		this.provider.setCredentials(AuthScope.ANY, this.credentials);
-		this.client = HttpClientBuilder.create().setDefaultCredentialsProvider(this.provider).build();
-			
 		HttpGet httpGet = new HttpGet(urlService);
+		httpGet.addHeader(OdataHttpRequest.ACCEPT,OdataHttpRequest.APPLICATION_JSON_VALUE);
 		HttpResponse response = this.client.execute(httpGet);
+		
+		
+		
 		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
 		StringBuffer result = new StringBuffer();
