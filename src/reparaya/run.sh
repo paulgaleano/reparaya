@@ -1,0 +1,2 @@
+cd /Users/paulgaleano/Library/Mobile Documents/com~apple~CloudDocs/Academico/Especialización Desarrollo de Software/Desarrollo de Software Basado en Componentes/Entregas/reparaya/reparaya
+mvn -Pjade-agent exec:java
