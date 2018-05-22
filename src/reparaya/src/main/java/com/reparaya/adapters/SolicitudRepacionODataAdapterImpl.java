@@ -12,8 +12,9 @@ public class SolicitudRepacionODataAdapterImpl implements SolicitudReparacionAda
 
 	private final static String SERVICE_URL = "https://my305237.crm.ondemand.com/sap/c4c/odata/v1/c4codata/ServiceRequestCollection?%24filter=ServiceRequestUserLifeCycleStatusCode+eq+%27YG%27+or+ServiceRequestUserLifeCycleStatusCode+eq+%27YM%27";
 
-	private final static String OBJECT_ID_PROPERTY = "ObjectID";
-	private final static String NAME_PROPERTY = "Name";
+	private final static String JSON_FIRST_NODE = "d";
+	private final static String JSON_SECOND_NODE = "results";
+	private final static String JSON_SOLICITUD_ID = "id";
 
 	private static SolicitudRepacionODataAdapterImpl solicitudRepacionAdapterImpl;
 
@@ -30,9 +31,9 @@ public class SolicitudRepacionODataAdapterImpl implements SolicitudReparacionAda
 	public List<SolicitudReparacionDto> getSolicitudesNoAsignadas() {
 		try {
 			JSONObject jSonResponse = OdataHttpRequest.getInstance().get(this.SERVICE_URL);
-			for (Object o : ((JSONObject) jSonResponse.get("d")).getJSONArray("results")) {
+			for (Object o : ((JSONObject) jSonResponse.get(SolicitudRepacionODataAdapterImpl.JSON_FIRST_NODE)).getJSONArray(SolicitudRepacionODataAdapterImpl.JSON_SECOND_NODE)) {
 				if (o instanceof JSONObject) {
-					System.out.println(((JSONObject) o).get("ID").toString());					
+					System.out.println(((JSONObject) o).get(SolicitudRepacionODataAdapterImpl.JSON_SOLICITUD_ID).toString());					
 				}
 			}
 
