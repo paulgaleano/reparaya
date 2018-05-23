@@ -32,10 +32,10 @@ public class OdataHttpRequest {
 	private CloseableHttpClient client;
 	
 	private OdataHttpRequest() {	
-		this.provider = new BasicCredentialsProvider();
+		/*this.provider = new BasicCredentialsProvider();
 		this.credentials = new UsernamePasswordCredentials(OdataHttpRequest.USERNAME, OdataHttpRequest.PASSWORD);
 		this.provider.setCredentials(AuthScope.ANY, this.credentials);
-		this.client = HttpClientBuilder.create().setDefaultCredentialsProvider(this.provider).build();
+		this.client = HttpClientBuilder.create().setDefaultCredentialsProvider(this.provider).build();*/
 	}
 	
 	public static OdataHttpRequest getInstance() {
@@ -46,6 +46,14 @@ public class OdataHttpRequest {
 	}
 	
 	public JSONObject post(String urlService, String payLoad) throws Exception {
+		this.provider = new BasicCredentialsProvider();
+		this.credentials = new UsernamePasswordCredentials(OdataHttpRequest.USERNAME, OdataHttpRequest.PASSWORD);
+		this.provider.setCredentials(AuthScope.ANY, this.credentials);
+		this.client = HttpClientBuilder.create().setDefaultCredentialsProvider(this.provider).build();
+		
+		
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
+		System.out.println(payLoad);
 		JSONObject jsonObject = null;
 		HttpPost httpPost = new HttpPost(urlService);
 		httpPost.setHeader(OdataHttpRequest.HEADER_X_CSRF_TOKEN, this.getToken(urlService));
@@ -69,10 +77,16 @@ public class OdataHttpRequest {
 			jsonObject = JSONObject.fromObject(result);
 		}
 		httpPost.releaseConnection();
+		System.out.println(jsonObject.toString());
 		return jsonObject;
 	}
 	
 	public JSONObject get(String urlService) throws Exception {
+		this.provider = new BasicCredentialsProvider();
+		this.credentials = new UsernamePasswordCredentials(OdataHttpRequest.USERNAME, OdataHttpRequest.PASSWORD);
+		this.provider.setCredentials(AuthScope.ANY, this.credentials);
+		this.client = HttpClientBuilder.create().setDefaultCredentialsProvider(this.provider).build();
+		
 		JSONObject jsonObject = null;
 		HttpGet httpGet = new HttpGet(urlService);
 		httpGet.addHeader(OdataHttpRequest.ACCEPT,OdataHttpRequest.APPLICATION_JSON_VALUE);
@@ -93,6 +107,10 @@ public class OdataHttpRequest {
 	}
 		
 	private String getToken(String urlService) throws Exception {
+		this.provider = new BasicCredentialsProvider();
+		this.credentials = new UsernamePasswordCredentials(OdataHttpRequest.USERNAME, OdataHttpRequest.PASSWORD);
+		this.provider.setCredentials(AuthScope.ANY, this.credentials);
+		this.client = HttpClientBuilder.create().setDefaultCredentialsProvider(this.provider).build();
 		String token = null;
 		HttpGet httpGet = new HttpGet(urlService);
 		httpGet.addHeader(OdataHttpRequest.HEADER_X_CSRF_TOKEN, "Fetch");

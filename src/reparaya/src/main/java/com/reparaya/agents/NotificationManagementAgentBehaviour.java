@@ -2,8 +2,6 @@ package com.reparaya.agents;
 
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
-import com.reparaya.adapters.SolicitudRepacionODataAdapterImpl;
-import jade.core.*;
 
 public class NotificationManagementAgentBehaviour extends SimpleBehaviour  {
 

@@ -1,22 +1,19 @@
 package com.reparaya.agents;
 
-import java.util.List;
-
-
 import jade.core.behaviours.CyclicBehaviour;
-import com.reparaya.adapters.SolicitudRepacionODataAdapterImpl;
-import com.reparaya.adapters.SolicitudReparacionAdapter;
-import com.reparaya.services.AppointmentServicesImpl;
+import com.reparaya.services.AppointmentService;
 
-public class AppointmentManagementAgentBehaviour extends CyclicBehaviour{		
+
+public class AppointmentManagementAgentBehaviour extends CyclicBehaviour {
+	
 	@Override
 	public void onStart(){
 		System.out.println("Inicie AppointmentManagementAgentBehaviour");
 	}
-	
+
 	@Override
 	public void action() {
-		AppointmentServicesImpl.getInstance().assignVisitas();
+		AppointmentService.getInstance().createVisitas();
 		block(9000);
 	}
 }
