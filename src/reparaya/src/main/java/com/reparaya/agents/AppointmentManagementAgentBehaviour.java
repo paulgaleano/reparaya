@@ -13,6 +13,7 @@ public class AppointmentManagementAgentBehaviour extends CyclicBehaviour {
 
 	@Override
 	public void action() {
+		AppointmentService.getInstance().setAgent(getAgent());
 		AppointmentService.getInstance().createVisitas();
 		block(9000);
 	}

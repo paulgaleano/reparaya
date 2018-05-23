@@ -107,6 +107,7 @@ public class OdataHttpRequest {
 	}
 		
 	private String getToken(String urlService) throws Exception {
+		System.out.println(urlService);
 		this.provider = new BasicCredentialsProvider();
 		this.credentials = new UsernamePasswordCredentials(OdataHttpRequest.USERNAME, OdataHttpRequest.PASSWORD);
 		this.provider.setCredentials(AuthScope.ANY, this.credentials);
@@ -126,6 +127,7 @@ public class OdataHttpRequest {
 			throw new Exception("No se retorno el token para las solicitudes");
 		}
 		token = headerToken.getValue();
+		System.out.println("TOKEN:"+token);
 		return token;
 	}
 }
